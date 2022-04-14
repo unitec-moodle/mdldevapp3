@@ -74,3 +74,7 @@
 	path = filter/echo360
 	url = https://github.com/malinz/moodle-filter_echo360-1.0.26
 	branch = master
+[submodule "lib/editor/atto/plugins/echo360attoplugin"]
+	path = lib/editor/atto/plugins/echo360attoplugin
+	url = https://github.com/malinz/moodle-atto_echo360attoplugin-1.0.26
+	branch = master

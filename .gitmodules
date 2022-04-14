@@ -114,3 +114,7 @@
 	path = admin/tool/uploadcoursecategory
 	url = https://github.com/piersharding/moodle-tool_uploadcoursecategory.git
 	branch = master
+[submodule "report/assign"]
+	path = report/assign
+	url = https://github.com/thepurpleblob/moodle-report_assign.git
+	branch = master

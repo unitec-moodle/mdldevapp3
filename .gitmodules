@@ -142,3 +142,7 @@
 	path = course/format/onetopic
 	url = https://github.com/davidherney/moodle-format_onetopic.git
 	branch = master
+[submodule "theme/boost_app_bus"]
+	path = theme/boost_app_bus
+	url = https://github.com/malinz/moodle-theme_boost_app_bus.git
+	branch = master

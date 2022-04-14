@@ -78,3 +78,7 @@
 	path = lib/editor/atto/plugins/echo360attoplugin
 	url = https://github.com/malinz/moodle-atto_echo360attoplugin-1.0.26
 	branch = master
+[submodule "lib/editor/atto/plugins/fullscreen"]
+	path = lib/editor/atto/plugins/fullscreen
+	url = https://github.com/dthies/moodle-atto_fullscreen.git
+	branch = master

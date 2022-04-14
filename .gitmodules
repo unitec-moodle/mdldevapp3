@@ -182,3 +182,7 @@
 	path = theme/boost_hawkins
 	url = https://github.com/malinz/moodle-theme_boost_hawkins.git
 	branch = master
+[submodule "theme/boost_health"]
+	path = theme/boost_health
+	url = https://github.com/malinz/moodle-theme_boost_health.git
+	branch = master

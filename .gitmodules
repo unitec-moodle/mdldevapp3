@@ -94,3 +94,7 @@
 	path = lib/editor/atto/plugins/morefontcolors
 	url = https://github.com/ndunand/moodle-atto_morefontcolors.git
 	branch = master
+[submodule "auth/saml2"]
+	path = auth/saml2
+	url = https://github.com/catalyst/moodle-auth_saml2.git
+	branch = MOODLE_39_STABLE

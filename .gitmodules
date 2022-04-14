@@ -18,3 +18,7 @@
 	path = local/boostnavigation
 	url = https://github.com/moodleuulm/moodle-local_boostnavigation.git
 	branch = MOODLE_311_STABLE
+[submodule "local/adminer"]
+	path = local/adminer
+	url = https://github.com/grabs/moodle-local_adminer.git
+	branch = MOODLE_39_STABLE

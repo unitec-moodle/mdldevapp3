@@ -158,3 +158,7 @@
 	path = theme/boost_bld_const
 	url = https://github.com/malinz/moodle-theme_boost_bld_const.git
 	branch = master
+[submodule "theme/boost_comm_stud"]
+	path = theme/boost_comm_stud
+	url = https://github.com/malinz/moodle-theme_boost_comm_stud.git
+	branch = master

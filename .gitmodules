@@ -174,3 +174,7 @@
 	path = theme/boost_eng_app_tech
 	url = https://github.com/malinz/moodle-theme_boost_eng_app_tech.git
 	branch = master
+[submodule "theme/boost_env_ani_sci"]
+	path = theme/boost_env_ani_sci
+	url = https://github.com/malinz/moodle-theme_boost_env_ani_sci.git
+	branch = master

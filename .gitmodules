@@ -26,3 +26,7 @@
 	path = theme/boost_unitec_std
 	url = https://github.com/malinz/moodle-theme_boost_unitec_std.git
 	branch = master
+[submodule "theme/classic_var_01"]
+	path = theme/classic_var_01
+	url = https://github.com/malinz/moodle-theme_classic_var_01
+	branch = master

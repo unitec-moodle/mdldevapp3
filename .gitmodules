@@ -22,3 +22,7 @@
 	path = local/adminer
 	url = https://github.com/grabs/moodle-local_adminer.git
 	branch = MOODLE_39_STABLE
+[submodule "theme/boost_unitec_std"]
+	path = theme/boost_unitec_std
+	url = https://github.com/malinz/moodle-theme_boost_unitec_std.git
+	branch = master

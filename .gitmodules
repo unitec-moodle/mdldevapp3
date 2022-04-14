@@ -6,7 +6,3 @@
 	path = blocks/admin_presets
 	url = https://github.com/DigiDago/moodle-block_admin_presets.git
 	branch = MOODLE_311_STABLE
-[submodule "theme/classic_var_01"]
-	path = theme/classic_var_01
-	url = https://github.com/malinz/classic_var_01.git
-	branch = master

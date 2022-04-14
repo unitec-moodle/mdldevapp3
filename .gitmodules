@@ -70,3 +70,7 @@
 	path = blocks/unitec_teacher_team
 	url = https://github.com/malinz/moodle-block_unitec_teacher_team
 	branch = master
+[submodule "filter/echo360"]
+	path = filter/echo360
+	url = https://github.com/malinz/moodle-filter_echo360-1.0.26
+	branch = master

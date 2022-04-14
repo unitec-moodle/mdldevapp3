@@ -194,3 +194,7 @@
 	path = theme/boost_soc_prac
 	url = https://github.com/malinz/moodle-theme_boost_soc_prac.git
 	branch = master
+[submodule "theme/boost_swift"]
+	path = theme/boost_swift
+	url = https://github.com/malinz/moodle-theme_boost_swift.git
+	branch = master

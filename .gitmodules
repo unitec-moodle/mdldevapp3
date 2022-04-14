@@ -166,3 +166,7 @@
 	path = theme/boost_comp_it
 	url = https://github.com/malinz/moodle-theme_boost_comp_it.git
 	branch = master
+[submodule "theme/boost_crtv_ind"]
+	path = theme/boost_crtv_ind
+	url = https://github.com/malinz/moodle-theme_boost_crtv_ind.git
+	branch = master

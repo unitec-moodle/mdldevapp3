@@ -110,3 +110,7 @@
 	path = admin/tool/mergeusers
 	url = https://github.com/ndunand/moodle-tool_mergeusers.git
 	branch = master
+[submodule "admin/tool/uploadcoursecategory"]
+	path = admin/tool/uploadcoursecategory
+	url = https://github.com/piersharding/moodle-tool_uploadcoursecategory.git
+	branch = master

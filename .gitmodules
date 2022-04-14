@@ -6,3 +6,7 @@
 	path = blocks/admin_presets
 	url = https://github.com/DigiDago/moodle-block_admin_presets.git
 	branch = MOODLE_311_STABLE
+[submodule "theme/classic_unitec_std"]
+	path = theme/classic_unitec_std
+	url = https://github.com/malinz/moodle-theme_classic_unitec_std.git
+	branch = master

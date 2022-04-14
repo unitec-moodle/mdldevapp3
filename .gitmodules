@@ -198,3 +198,7 @@
 	path = theme/boost_swift
 	url = https://github.com/malinz/moodle-theme_boost_swift.git
 	branch = master
+[submodule "theme/boost_tpa"]
+	path = theme/boost_tpa
+	url = https://github.com/malinz/moodle-theme_boost_tpa.git
+	branch = master

@@ -106,3 +106,7 @@
 	path = admin/tool/deletecourses
 	url = https://github.com/LafColITS/moodle-tool_deletecourses.git
 	branch = main
+[submodule "admin/tool/mergeusers"]
+	path = admin/tool/mergeusers
+	url = https://github.com/ndunand/moodle-tool_mergeusers.git
+	branch = master

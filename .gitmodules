@@ -42,7 +42,3 @@
 	path = mod/hotpot
 	url = https://github.com/gbateson/moodle-mod_hotpot.git
 	branch = master
-[submodule "mod/turnitintooltwo"]
-	path = mod/turnitintooltwo
-	url = https://github.com/turnitin/moodle-mod_turnitintooltwo.git
-	branch = release-2021060701

@@ -186,3 +186,7 @@
 	path = theme/boost_health
 	url = https://github.com/malinz/moodle-theme_boost_health.git
 	branch = master
+[submodule "theme/boost_police"]
+	path = theme/boost_police
+	url = https://github.com/malinz/moodle-theme_boost_police.git
+	branch = master

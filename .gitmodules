@@ -26,10 +26,6 @@
 	path = theme/classic_var_01
 	url = https://github.com/malinz/moodle-theme_classic_var_01
 	branch = master
-[submodule "theme/boost_var_01"]
-	path = theme/boost_var_01
-	url = https://github.com/malinz/moodle-theme_boost_var_01.git
-	branch = master
 [submodule "mod/attendanceregister"]
 	path = mod/attendanceregister
 	url = https://github.com/CinecaElearning/moodle-mod_attendanceregister.git
@@ -41,4 +37,8 @@
 [submodule "mod/hotpot"]
 	path = mod/hotpot
 	url = https://github.com/gbateson/moodle-mod_hotpot.git
+	branch = master
+[submodule "mod/turnitintooltwo"]
+	path = mod/turnitintooltwo
+	url = https://github.com/turnitin/moodle-mod_turnitintooltwo.git
 	branch = master

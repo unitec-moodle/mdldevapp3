@@ -66,3 +66,7 @@
 	path = blocks/grade_me
 	url = https://github.com/remotelearner/moodle-block_grade_me.git
 	branch = MOODLE_311_STABLE
+[submodule "blocks/unitec_teacher_team"]
+	path = blocks/unitec_teacher_team
+	url = https://github.com/malinz/moodle-block_unitec_teacher_team
+	branch = master

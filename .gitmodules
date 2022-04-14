@@ -42,3 +42,7 @@
 	path = mod/turnitintooltwo
 	url = https://github.com/turnitin/moodle-mod_turnitintooltwo.git
 	branch = master
+[submodule "theme/boost_var_01"]
+	path = theme/boost_var_01
+	url = https://github.com/malinz/moodle-theme_boost_var_01.git
+	branch = master

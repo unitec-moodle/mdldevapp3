@@ -30,3 +30,7 @@
 	path = theme/boost_var_01
 	url = https://github.com/malinz/moodle-theme_boost_var_01.git
 	branch = master
+[submodule "mod/attendanceregister"]
+	path = mod/attendanceregister
+	url = https://github.com/CinecaElearning/moodle-mod_attendanceregister.git
+	branch = master

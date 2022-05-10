@@ -122,7 +122,6 @@ class user_importer extends base_importer {
         INNER JOIN {{$maintable}} main
                 ON main.idnumber = import.idnumber
              WHERE import.action = ?
-             AND ( {$wheresql} )
         ";
         return $DB->get_records_sql($sql, $params);
     }

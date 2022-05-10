@@ -100,7 +100,6 @@ class enrol_importer extends base_importer {
         INNER JOIN {{$maintable}} main
                 ON main.course_idnumber = import.course_idnumber AND main.user_idnumber = import.user_idnumber
              WHERE import.action = ?
-             AND ( {$wheresql} )
         ";
         return $DB->get_records_sql($sql, $params);
     }

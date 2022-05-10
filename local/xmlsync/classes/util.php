@@ -66,13 +66,14 @@ class util {
      */
     public static function enrol_database_course_update_hook(&$course) {
         global $DB;
-        return false;//TODO we need to update the course visibility here
         $select = $DB->sql_like('course_idnumber', ':idnum', false); // Case insensitive.
         $params = array('idnum' => $course->idnumber);
         $matchingrecord = $DB->get_record_select('local_xmlsync_crsimport', $select, $params);
-        if ($matchingrecord) {
+        if ($matchingrecord && $course->visible != $matchingrecord->course_visibility) {
             $course->visible = $matchingrecord->course_visibility;
+            $DB->update_record('course', $course);
         }
+
     }
 
     /**

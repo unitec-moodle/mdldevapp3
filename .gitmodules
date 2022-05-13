@@ -206,3 +206,7 @@
 	path = theme/boost_trds_serv
 	url = https://github.com/malinz/moodle-theme_boost_trds_serv.git
 	branch = master
+[submodule "question/type/coderunner"]
+	path = question/type/coderunner
+	url = https://github.com/trampgeek/moodle-qtype_coderunner.git
+	branch = master

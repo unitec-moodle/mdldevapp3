@@ -50,7 +50,7 @@ $string['import:stalefile'] = "The supplied import XML file is older than expect
 $string['import:stalefile_timestamp'] = 'ROWSET timestamp given: {$a}';
 $string['import:stalemailsubject'] = 'Warning: Old XML file encountered in import {$a}';
 $string['import:sanitycheck'] = 'Sanity checking delta file';
-$string['import:rowcount'] = '{$a->importcount} rows imported, of which {$a->updatecount} were update actions and {$a->deletecount} were delete actions';
+$string['import:rowcount'] = '{$a->importcount} rows imported, of which {$a->updatecount} were update actions and {$a->deletecount} were delete actions and {$a->errorcount} were invalid records';
 
 $string['sync:start'] = 'Now aligning the primary table {$a->maintable} with the delta from the import table {$a->importtable}';
 $string['sync:complete'] = 'Alignment complete, new main table record count {$a->post_sync_total}, delta change was {$a->delta}, {$a->deletecount} records were deleted, {$a->updatecount} records were updated, {$a->insertcount} records were created';

@@ -132,8 +132,9 @@ class user_importer extends base_importer {
      * @param mixed $columname 
      * @return void 
      */
-    public function validate_parameter($nodevalue, $columname)
+    public function mutate_parameter($nodevalue, $columname)
     {
+        $nodevalue = parent::mutate_parameter($nodevalue, $columname);
         if($columname == 'password') {
             if(!isset($nodevalue) || $nodevalue == '') {
                 $nodevalue = null;

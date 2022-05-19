@@ -374,6 +374,31 @@ function xmldb_local_xmlsync_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2022050500, 'local', 'xmlsync');
     }
 
+    if ($oldversion < 2022051900) {
+
+        // Define field institution to be added to local_xmlsync_userimport.
+        $table = new xmldb_table('local_xmlsync_userimport');
+        $field = new xmldb_field('institution', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'purge_dt');
+
+        // Conditionally launch add field institution.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field institution to be added to local_xmlsync_userimport_tmp.
+        $table = new xmldb_table('local_xmlsync_userimport_tmp');
+        $field = new xmldb_field('institution', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'purge_dt');
+
+        // Conditionally launch add field institution.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xmlsync savepoint reached.
+        upgrade_plugin_savepoint(true, 2022051900, 'local', 'xmlsync');
+    }
+
+
     return true;
 }
 

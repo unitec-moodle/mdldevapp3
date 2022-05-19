@@ -30,6 +30,7 @@ use coding_exception;
 use Exception;
 use moodle_exception;
 use stdClass;
+use core_text;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -92,14 +93,24 @@ abstract class base_importer {
     public $rowmapping = null;
 
     /**
+     * Array containing column information from the import temp table
+     * 
+     * fetched by a get_columns call
+     * @var mixed
+     */
+    private $temp_table_columns = null;
+
+    /**
      * Constructor.
      */
     public function __construct() {
+        global $DB;
         $this->filepath = $this->get_filepath(get_config('local_xmlsync', 'syncpath'), $this->filename);
         $this->reader = new \XMLReader();
-        if (!$this->reader->open($this->filepath)) {
+        if (!$this->reader->open($this->filepath, null, LIBXML_BIGLINES| LIBXML_PARSEHUGE)) {
             throw new \Exception(get_string('error:noopen', 'local_xmlsync', $this->filepath));
         }
+        $this->temp_table_columns = $DB->get_columns($this->import_temp_tablename);
     }
 
     /**
@@ -317,7 +328,6 @@ abstract class base_importer {
 
         mtrace(get_string('importingstart', 'local_xmlsync', $importtable) . "\n");
         $reader = $this->reader;  // Shorthand.
-
         // Ensure we have the right top-level node.
         $reader->read();
         if($reader->name != self::XMLROWSET) {
@@ -333,6 +343,7 @@ abstract class base_importer {
             "sourcetimestamp" => $sourcetimestamp,
         );
         $importcount = 0;
+        $errorcount = 0;
 
         // Check for stale file import: warn, but continue processing.
         $stalethreshold = get_config('local_xmlsync', 'stale_threshold'); // Difference in seconds.
@@ -372,14 +383,22 @@ abstract class base_importer {
                 if ($reader->name == self::XMLROW) {
                     $rowdata = array();
                     $rownode = $reader->expand();
+                    $valid = true;
                     foreach (array_keys($this->rowmapping) as $xmlfield) {
-                        $this->import_rowfield($rowdata, $rownode, $xmlfield);
+                        $valid = $valid && $this->import_rowfield($rowdata, $rownode, $xmlfield);
                     }
 
                     $batch_count++;
                     $importcount++;
-                    $to_import[] = $rowdata;
-                    if($batch_count > $batchsize) {
+                    if($valid) {
+                        $to_import[] = $rowdata;
+                        $rowdata = [];
+                    }
+                    else {
+                        $errorcount ++;
+                        $rowdata = [];
+                    }
+                    if($batch_count >= $batchsize) {
                         $DB->insert_records($importtable, $to_import);
                         $to_import = [];
                         $batch_count = 0;
@@ -416,6 +435,8 @@ abstract class base_importer {
         ksort($metadata);
 
         $counts = $this->count_import_types($importtable);
+        $counts->errorcount = $errorcount;
+        $counts->totalcount = $counts->errorcount + $counts->insertedcount;
         // Ensure imported row count matches expected tally.
         if($counts->totalcount != $metadata["rowcount"]) {
             throw new moodle_exception("Row count mismatch: after import we had {$counts->totalcount} rows in the database, expected {$metadata["rowcount"]} rows.");
@@ -428,10 +449,18 @@ abstract class base_importer {
         return true;
     }
 
+    /**
+     * Mtrace prints and logs to db an error for a record, overwritten by child importers to allow them to pretty print the record in useful ways
+     */
+    protected function print_error_for_record($record, $error_string) {
+        $final = "base: ".$error_string;
+        mtrace($final);
+    }
+
     protected function count_import_types($tablename) {
         global $DB;
         $result = new stdClass();
-        $result->totalcount = $DB->count_records($tablename);
+        $result->insertedcount = $DB->count_records($tablename);
         $result->updatecount = $DB->count_records($tablename, array('action' => self::ACTION_UPDATE));
         $result->deletecount = $DB->count_records($tablename, array('action' => self::ACTION_DELETE));
         return $result;
@@ -450,29 +479,75 @@ abstract class base_importer {
         $nodes = $node->getElementsByTagName($xmlfield);
         if($nodes->length == 0) {
             $nodevalue = null;//No value contained in the db
+            $elementNode = null;
         }else {
+            $elementNode = $nodes[0];
             $nodevalue = $nodes[0]->nodeValue;
         }
         
+        //Allow client importers to mutate parameters
+        $nodevalue = $this->mutate_parameter($nodevalue, $columnname);
+        $rowdata[$columnname] = $nodevalue;
+        //Now validate the parameter is valid
+        return $this->validate_parameter($nodevalue, $columnname, $elementNode);
+    }
 
+    /**
+     * Mutate parameters coming from the xml file before they are validated
+     * 
+     * This can be overriden by children classes for import specific mutating
+     * @param mixed $nodevalue 
+     * @param mixed $columnname 
+     * @return mixed return the mutated node value to replace the original
+     */
+    public function mutate_parameter($nodevalue, $columnname) {
         if (substr_compare($columnname, "_dt", -strlen("_dt")) == 0) {
             // Special handling for timestamps.
             $nodevalue = (int) $nodevalue;
         }
-
-        $nodevale = $this->validate_parameter($nodevalue, $columnname);
-
-        $rowdata[$columnname] = $nodevalue;
+        //replace with default if set
+        if(key_exists($columnname, $this->temp_table_columns)) {
+            $column = $this->temp_table_columns[$columnname];
+            if($nodevalue == null && $column->has_default) {
+                $nodevalue = $column->default_value;
+            }
+        }
+        return $nodevalue;
     }
 
     /**
      * Allow subclasses to do custom validation/handling of a rowdata parameter if necessary
-     * @param mixed $nodevalue 
+     * @param mixed $nodevalue The value from the domnode element (can be null)
      * @param mixed $columname 
+     * @param DOMNode $node the elemnent we are validating right now
      * @return void 
      */
-    public function validate_parameter($nodevalue, $columname) {
-        return $nodevalue;
+    public function validate_parameter($nodevalue, $columnname, $node) {
+        if(!key_exists($columnname, $this->temp_table_columns)) {
+            $this->log_import_error("Tried to import a columnname that did not exist {$columnname}", $node->getLineNo(), $this->filepath);
+            return $nodevalue;
+        }
+        $column = $this->temp_table_columns[$columnname];
+        if($nodevalue !== null) {
+            if($column->max_length != -1) {
+                if(core_text::strlen($nodevalue) > $column->max_length) {
+                    $this->log_import_error('max length of column '. $columnname. ' exceeded, value was '.$nodevalue, $node->getLineNo(), $this->filepath);
+                    return false;
+                }
+            }
+        } else if ($column->not_null && !$column->has_default) {
+            $this->log_import_error('Required column '. $columnname. ' did not have a value set in the import file', $node->getLineNo, $this->filepath);
+            return false;
+        }
+        return true;
+    }
+
+    public function log_import_error($errorstring, $linenumber, $sourcefile, $fatal=false) {
+        $error = "Import error occurred on line {$linenumber}, in {$sourcefile} - $errorstring";
+        mtrace($error);
+        if($fatal) {
+            throw $error;
+        }
     }
   
     /**

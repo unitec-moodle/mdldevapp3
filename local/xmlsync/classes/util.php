@@ -66,6 +66,10 @@ class util {
      */
     public static function enrol_database_course_update_hook(&$course) {
         global $DB;
+        //No idnumber, means no update
+        if(!isset($course->idnumber) || $course->idnumber == "") {
+            return;
+        }
         $select = $DB->sql_like('course_idnumber', ':idnum', false); // Case insensitive.
         $params = array('idnum' => $course->idnumber);
         $matchingrecord = $DB->get_record_select('local_xmlsync_crsimport', $select, $params);

@@ -46,6 +46,7 @@ class course_importer extends base_importer {
         'COURSE_SHORTNAME'  => 'course_shortname',
         'COURSE_TEMPLATE'   => 'course_template',
         'COURSE_VISIBILITY' => 'course_visibility',
+        'COURSE_CATEGORY'   => 'course_category',
         'ACTION'            => 'action',
     );
 

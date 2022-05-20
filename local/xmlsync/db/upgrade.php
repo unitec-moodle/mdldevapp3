@@ -398,6 +398,28 @@ function xmldb_local_xmlsync_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2022051900, 'local', 'xmlsync');
     }
 
+    if ($oldversion < 2022052000) {
+
+        // Define field course_category to be added to local_xmlsync_crsimport.
+        $table = new xmldb_table('local_xmlsync_crsimport');
+        $field = new xmldb_field('course_category', XMLDB_TYPE_CHAR, '10', null, null, null, null, 'course_visibility');
+
+        // Conditionally launch add field course_category.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field course_category to be added to local_xmlsync_crsimport_tmp.
+        $table = new xmldb_table('local_xmlsync_crsimport_tmp');
+        $field = new xmldb_field('course_category', XMLDB_TYPE_CHAR, '10', null, null, null, null, 'course_visibility');
+
+        // Conditionally launch add field course_category.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }        
+        // Xmlsync savepoint reached.
+        upgrade_plugin_savepoint(true, 2022052000, 'local', 'xmlsync');
+    }
 
     return true;
 }

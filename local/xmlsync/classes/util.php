@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class util {
     /**
-     * Hook for enrol_database to set course visibility.
+     * Hook for enrol_database to set course visibility for first course creation
      *
      * If an xmlsync record with a matching idnumber is found, set course visibility accordingly.
      *
@@ -49,8 +49,7 @@ class util {
         if ($matchingrecord && isset($matchingrecord->course_visibility)) {
             $course->visible = $matchingrecord->course_visibility;
             $course->timemodified = time();
-            $trace->output("Updating course settings for {$course->fullname}, shortname:{$course->shortname}, idnumber:{$course->idnumber}");
-            $DB->update_record('course', $course);
+            $trace->output("Setting course settings for {$course->fullname}, shortname:{$course->shortname}, idnumber:{$course->idnumber}");
         }
     }
 

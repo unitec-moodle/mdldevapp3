@@ -132,9 +132,10 @@ class copy  {
      * Creates a course copy.
      * Sets up relevant controllers and adhoc task.
      *
+     * @param $clone_creation_date if the copy task should clone creation and timemodified from the copied course
      * @return array $copyids THe backup and restore controller ids.
      */
-    public function create_copy(): array {
+    public function create_copy($clone_creation_date=True): array {
         global $USER;
         $copyids = array();
 
@@ -151,6 +152,7 @@ class copy  {
             \backup::INTERACTIVE_NO, \backup::MODE_COPY, $USER->id,
             \backup::TARGET_NEW_COURSE);
         $copyids['restoreid'] = $rc->get_restoreid();
+        $copyids['clone_creation_date'] = $clone_creation_date;
 
         // Configure the controllers based on the submitted data.
         $copydata = $this->copydata;

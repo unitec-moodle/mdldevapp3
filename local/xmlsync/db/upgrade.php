@@ -421,6 +421,21 @@ function xmldb_local_xmlsync_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2022052000, 'local', 'xmlsync');
     }
 
+    if ($oldversion < 2022052400) {
+
+        // Define field copy_task_controllers to be added to local_xmlsync_crsimport.
+        $table = new xmldb_table('local_xmlsync_crsimport');
+        $field = new xmldb_field('copy_task_controllers', XMLDB_TYPE_TEXT, null, null, null, null, null, 'course_category');
+
+        // Conditionally launch add field copy_task_controllers.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Xmlsync savepoint reached.
+        upgrade_plugin_savepoint(true, 2022052400, 'local', 'xmlsync');
+    }
+
+
     return true;
 }
 

@@ -58,6 +58,8 @@ abstract class base_importer {
      */
     public $filename = null;
 
+    public $exclude_columns = array('id');
+
     /**
      * The table the xml document is imported to
      * @var string|null
@@ -245,7 +247,7 @@ abstract class base_importer {
         $where = [];
         $columns = $DB->get_columns($maintable);
         foreach($columns as $column) {
-            if($column->name == 'id') {
+            if( in_array($column->name, $this->exclude_columns) ) {
                 continue;
             }
             

@@ -36,6 +36,8 @@ class course_importer extends base_importer {
 
     public $import_main_tablename = 'local_xmlsync_crsimport';
 
+    public $exclude_columns = array('id', 'copy_task_controllers');
+
     /**
      * Mapping from incoming XML field names to database column names.
      * Note: ACTION is handled separately.

@@ -41,13 +41,16 @@ class util {
      * @param stdClass $course
      * @return void
      */
-    public static function enrol_database_course_hook(&$course) {
+    public static function enrol_database_course_hook(&$course, $trace) {
         global $DB;
         $select = $DB->sql_like('course_idnumber', ':idnum', false); // Case insensitive.
         $params = array('idnum' => $course->idnumber);
         $matchingrecord = $DB->get_record_select('local_xmlsync_crsimport', $select, $params);
-        if ($matchingrecord) {
+        if ($matchingrecord && isset($matchingrecord->course_visibility)) {
             $course->visible = $matchingrecord->course_visibility;
+            $course->timemodified = time();
+            $trace->output("Updating course settings for {$course->fullname}, shortname:{$course->shortname}, idnumber:{$course->idnumber}");
+            $DB->update_record('course', $course);
         }
     }
 
@@ -64,7 +67,7 @@ class util {
      * @param stdClass $course
      * @return void
      */
-    public static function enrol_database_course_update_hook(&$course) {
+    public static function enrol_database_course_update_hook(&$course, $trace) {
         global $DB;
         //No idnumber, means no update
         if(!isset($course->idnumber) || $course->idnumber == "") {
@@ -73,8 +76,10 @@ class util {
         $select = $DB->sql_like('course_idnumber', ':idnum', false); // Case insensitive.
         $params = array('idnum' => $course->idnumber);
         $matchingrecord = $DB->get_record_select('local_xmlsync_crsimport', $select, $params);
-        if ($matchingrecord && $course->visible != $matchingrecord->course_visibility) {
+        if ($matchingrecord && isset($matchingrecord->course_visibility) && $course->visible != $matchingrecord->course_visibility) {
             $course->visible = $matchingrecord->course_visibility;
+            $course->timemodified = time();
+            $trace->output("Updating course settings for {$course->fullname}, shortname:{$course->shortname}, idnumber:{$course->idnumber}");
             $DB->update_record('course', $course);
         }
 
@@ -117,7 +122,7 @@ class util {
      * @param stdClass $course
      * @return void
      */
-    public static function enrol_database_template_hook($course) {
+    public static function enrol_database_template_hook($course, $trace) {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
         require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
@@ -126,10 +131,8 @@ class util {
         $matchingrecord = $DB->get_record_select('local_xmlsync_crsimport', $select, $params);
         if ($matchingrecord) {
             $templatecourse = $DB->get_record('course', array('idnumber' => $matchingrecord->course_template));
-
-            if ($templatecourse) {
-                echo "Found matching record and template course.\n";
-                echo "Cloning from '{$templatecourse->fullname}' into '{$course->fullname}':\n";
+            if ($templatecourse && (!isset($matchingrecord->copy_task_controllers) || $matchingrecord->copy_task_controllers == null)) {
+                $trace->output("Cloning from '{$templatecourse->fullname}' into '{$course->fullname}':\n");
 
                 // Make a fake course copy form.
                 $dummyform = array(
@@ -149,8 +152,18 @@ class util {
                 $mdata = (object) $dummyform;
 
                 $backupcopy = new \core_backup\copy\copy($mdata);
-                $backupcopy->create_copy();
+                $matchingrecord->copy_task_controllers = json_encode($backupcopy->create_copy(False));
+                $DB->update_record('local_xmlsync_crsimport', $matchingrecord);
+                return True;
+            }
+            else if ($templatecourse) {
+                $trace->output("Copy is already in progress for {$course->fullname}, skipping");
+                return False;
+            }
+            else {
+                $trace->output("We could not find a matching template for {$course->fullname}, the template idnumber was {$matchingrecord->course_template}");
             }
         }
+        return False;
     }
 }

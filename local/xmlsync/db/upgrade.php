@@ -435,7 +435,6 @@ function xmldb_local_xmlsync_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2022052400, 'local', 'xmlsync');
     }
 
-
     return true;
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/xmlsync/db" VERSION="20220524" COMMENT="XMLDB file for Moodle local/xmlsync"
+<XMLDB PATH="local/xmlsync/db" VERSION="20220530" COMMENT="XMLDB file for Moodle local/xmlsync"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >

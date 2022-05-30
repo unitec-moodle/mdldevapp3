@@ -38,6 +38,7 @@ class course_importer extends base_importer {
 
     public $exclude_columns = array('id', 'copy_task_controllers');
 
+
     /**
      * Mapping from incoming XML field names to database column names.
      * Note: ACTION is handled separately.
@@ -101,5 +102,26 @@ class course_importer extends base_importer {
              WHERE import.action = ?
         ";
         return $DB->get_records_sql($sql, $params);
+    }
+
+    public function sanity_check_import_table($importtable) {
+        global $DB;
+        $sql = "SELECT * FROM (SELECT course_idnumber, count(id) as appearances
+                  FROM {{$importtable}}
+              GROUP BY course_idnumber) as dupes
+                 WHERE dupes.appearances > 1";
+        $dupes = $DB->get_records_sql($sql);
+        foreach($dupes as $dupe) {
+            mtrace("course idnumber appeared more than once - course_idnumber: $dupe->course_idnumber, total appearances $dupe->appearances");
+        }
+
+        $sql = "SELECT * FROM (SELECT course_shortname, count(id) as appearances
+                  FROM {{$importtable}}
+              GROUP BY course_shortname) as dupes
+                 WHERE dupes.appearances > 1";
+        $dupes = $DB->get_records_sql($sql);
+        foreach($dupes as $dupe) {
+            mtrace("course shortname appeared more than once - course_shortname: $dupe->course_shortname, total appearances $dupe->appearances");
+        }
     }
 }

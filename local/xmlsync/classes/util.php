@@ -25,6 +25,8 @@
 
 namespace local_xmlsync;
 
+use moodle_exception;
+
 defined('MOODLE_INTERNAL') || die();
 
 class util {
@@ -133,6 +135,9 @@ class util {
             if ($templatecourse && (!isset($matchingrecord->copy_task_controllers) || $matchingrecord->copy_task_controllers == null)) {
                 $trace->output("Cloning from '{$templatecourse->fullname}' into '{$course->fullname}':\n");
 
+
+               $roles = explode(',', get_config('local_xmlsync', 'roles_to_keep'));
+               
                 // Make a fake course copy form.
                 $dummyform = array(
                     'courseid' => $templatecourse->id,  // Copying from here.
@@ -144,9 +149,12 @@ class util {
                     'enddate' => $course->enddate,
                     'idnumber' => $course->idnumber,
                     'userdata' => '0',  // Do not copy user data.
-                    'role_1' => '1', // Keep managers?
-                    'role_5' => '0', // Drop students.
                 );
+
+                foreach($roles as $role) {
+                    $dummyform['role_'.$role] = 1;
+                }
+               
                 // Cast to stdClass object.
                 $mdata = (object) $dummyform;
 

@@ -34,9 +34,9 @@ class enrol_importer extends base_importer {
     public $import_temp_tablename = 'local_xmlsync_enrlimport_tmp';
 
     public $import_main_tablename = 'local_xmlsync_enrlimport';
+
     /**
      * Mapping from incoming XML field names to database column names.
-     * Note: ACTION is handled separately.
      */
     public $rowmapping = array(
         'COURSE_IDNUMBER'    => 'course_idnumber',

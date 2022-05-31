@@ -102,6 +102,7 @@ abstract class base_importer {
      */
     private $temp_table_columns = null;
 
+
     /**
      * Constructor.
      */
@@ -425,6 +426,7 @@ abstract class base_importer {
             $batch_count = 0;
         }
 
+
         // Ensure imported row count matches expected tally.
         if($importcount != $metadata["rowcount"]) {
             throw new moodle_exception("Row count mismatch: imported {$importcount} rows, expected {$metadata["rowcount"]} rows.");
@@ -436,6 +438,7 @@ abstract class base_importer {
         $metadata['importedtime'] = (new \DateTimeImmutable('now'))->getTimestamp();
         ksort($metadata);
 
+        //We have done all changes we expect, count up what's in the temp tables
         $counts = $this->count_import_types($importtable);
         $counts->errorcount = $errorcount;
         $counts->totalcount = $counts->errorcount + $counts->insertedcount;
@@ -525,6 +528,7 @@ abstract class base_importer {
      * @return void 
      */
     public function validate_parameter($nodevalue, $columnname, $node) {
+        global $DB;
         if(!key_exists($columnname, $this->temp_table_columns)) {
             $this->log_import_error("Tried to import a columnname that did not exist {$columnname}", $node->getLineNo(), $this->filepath);
             return $nodevalue;
@@ -538,9 +542,10 @@ abstract class base_importer {
                 }
             }
         } else if ($column->not_null && !$column->has_default) {
-            $this->log_import_error('Required column '. $columnname. ' did not have a value set in the import file', $node->getLineNo, $this->filepath);
+            $this->log_import_error('Required column '. $columnname. ' did not have a value set in the import file', $node->getLineNo(), $this->filepath);
             return false;
         }
+        
         return true;
     }
 

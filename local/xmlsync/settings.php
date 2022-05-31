@@ -62,4 +62,21 @@ if ($hassiteconfig) {
         get_string('settings:email_cooldown_desc', 'local_xmlsync'), 3600, 3600 // One hour default.
     ));
 
+    $role_ids = get_roles_for_contextlevels(CONTEXT_COURSE);
+    list($sql, $params) = $DB->get_in_or_equal($role_ids, SQL_PARAMS_QM, 'lxml', true, '= NULL');
+    $roles = $DB->get_records_select('role', "id $sql", $params);
+    $choices = [];
+    foreach($roles as $role) {
+        $choices[$role->id] = $role->shortname;
+    }
+
+    $settings->add(
+        new admin_setting_configmultiselect(
+            'local_xmlsync/roles_to_keep',
+            get_string('settings:roles_to_keep', 'local_xmlsync'),
+            get_string('settings:roles_to_keep_desc', 'local_xmlsync'),
+            [],
+            $choices
+        )
+    );
 }

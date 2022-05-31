@@ -35,20 +35,6 @@ class user_importer extends base_importer {
     public $import_main_tablename = 'local_xmlsync_userimport';
 
     /**
-     * Import count from last import, if any.
-     * Set during task initialisation.
-     * @var int|null
-     */
-    public $lastimportcount = null;
-
-    /**
-     * Source timestamp from last import, if any.
-     * Set during task initialisation.
-     * @var int|null
-     */
-    public $lastsourcetimestamp = null;
-
-    /**
      * Mapping from incoming XML field names to database column names.
      * Note: ACTION is handled separately.
      */

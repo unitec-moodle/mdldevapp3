@@ -144,7 +144,7 @@ class util {
                     'fullname' => $course->fullname,
                     'shortname' => $course->shortname,
                     'category' => $course->category,
-                    'visible' => $course->visible,
+                    'visible' => $matchingrecord->course_visibility,
                     'startdate' => $course->startdate,
                     'enddate' => $course->enddate,
                     'idnumber' => $course->idnumber,

@@ -152,7 +152,9 @@ class util {
                 );
 
                 foreach($roles as $role) {
-                    $dummyform['role_'.$role] = 1;
+                    //This has to both be set to role_{id} and then the value be the role {id}
+                    //As the copy API code uses the value in the kept roles list
+                    $dummyform['role_'.$role] = $role;
                 }
                
                 // Cast to stdClass object.
